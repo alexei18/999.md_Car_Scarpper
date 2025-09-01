@@ -84,41 +84,49 @@ def get_ads_from_api(session, page_number, search_input, ads_per_page=90):
 import re
 
 def get_phone_number_with_playwright(page, ad_url):
-    """Navighează la un URL, dă click pe buton și extrage numerele de telefon folosind regex."""
-    try:
-        page.goto(ad_url, wait_until='domcontentloaded', timeout=15000)
-        
-        show_phone_button = page.locator("button:has-text('Arată numărul')").first
-        
+    """Navighează la un URL, dă click pe buton și extrage numerele de telefon, cu reîncercări."""
+    max_retries = 3
+    for attempt in range(max_retries):
         try:
-            show_phone_button.wait_for(state='visible', timeout=5000)
-            show_phone_button.click(timeout=3000, force=True)
-            # Am mărit pauza pentru a permite paginii să încarce numărul
-            page.wait_for_timeout(random.uniform(1800, 2500))
+            page.goto(ad_url, wait_until='domcontentloaded', timeout=15000)
+            
+            show_phone_button = page.locator("button:has-text('Arată numărul')").first
+            
+            try:
+                show_phone_button.wait_for(state='visible', timeout=5000)
+                show_phone_button.click(timeout=3000, force=True)
+                page.wait_for_timeout(random.uniform(1800, 2500))
+            except PlaywrightTimeoutError:
+                # Ignorăm eroarea dacă butonul nu e găsit, poate numărul e deja vizibil
+                pass
+
+            page_content = page.locator('body').inner_text()
+            
+            phone_regex = r'\+373(?:\s*\d){8,}'
+            matches = re.finditer(phone_regex, page_content)
+            found_numbers = [match.group(0) for match in matches]
+            
+            cleaned_numbers = {''.join(num.split()) for num in found_numbers}
+            
+            support_number_cleaned = "+37322888002"
+            valid_numbers = {num for num in cleaned_numbers if num != support_number_cleaned}
+            
+            if valid_numbers:
+                return ", ".join(sorted(list(valid_numbers)))
+            else:
+                # Dacă nu s-au găsit numere, forțăm o eroare pentru a declanșa reîncercarea
+                raise PlaywrightTimeoutError("Nu s-au găsit numere valide în încercarea curentă.")
+
         except PlaywrightTimeoutError:
-            pass
-
-        page_content = page.locator('body').inner_text()
-        
-        # Expresie regulată robustă pentru numere de telefon
-        phone_regex = r'\+373(?:\s*\d){8,}'
-        
-        # Folosim re.finditer pentru a garanta extragerea potrivirii complete
-        matches = re.finditer(phone_regex, page_content)
-        found_numbers = [match.group(0) for match in matches]
-        
-        cleaned_numbers = {''.join(num.split()) for num in found_numbers}
-        
-        support_number_cleaned = "+37322888002"
-        valid_numbers = {num for num in cleaned_numbers if num != support_number_cleaned}
-        
-        if valid_numbers:
-            return ", ".join(sorted(list(valid_numbers)))
-        else:
-            return "Nu s-au găsit numere valide"
-
-    except Exception as e:
-        return f"Eroare la extragere: {type(e).__name__}"
+            print(f"  Încercarea {attempt + 1}/{max_retries} a eșuat pentru {ad_url}. Se reîncearcă...")
+            if attempt < max_retries - 1:
+                time.sleep(random.uniform(2, 4))  # Așteaptă înainte de următoarea încercare
+            else:
+                return "Eroare: Eșuat după multiple încercări" # Mesaj final de eroare
+        except Exception as e:
+            return f"Eroare neașteptată: {type(e).__name__}"
+    
+    return "Nu s-au găsit numere valide"
 
 def parse_ad_data(ad_raw):
     """Procesează datele brute de la API."""
