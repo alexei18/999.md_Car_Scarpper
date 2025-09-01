@@ -5,7 +5,8 @@ import random
 import os.path
 import sys
 import codecs
-from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeoutError
+from playwright.sync_api import sync_playwright, expect, TimeoutError as PlaywrightTimeoutError
+import re
 
 # =================================================================================================
 # --- CONFIGURARE MANUALĂ ---
@@ -34,7 +35,7 @@ SEARCH_PAYLOAD = {
             "features": [
                 {
                     "featureId": 20,
-                    "optionIds": [139]
+                    "optionIds": [111]
                 }
             ]
         }
@@ -45,7 +46,7 @@ SEARCH_PAYLOAD = {
 IS_TEST_MODE = True   # Procesează doar 10 anunțuri pentru testare rapidă
 # IS_TEST_MODE = False  # Procesează TOATE anunțurile noi de pe site
 
-MAX_ADS_TO_PROCESS_IN_TEST_MODE = 89
+MAX_ADS_TO_PROCESS_IN_TEST_MODE = 20
 JSON_FILE = 'date_masini_999_complet.json'
 # =================================================================================================
 
@@ -80,32 +81,42 @@ def get_ads_from_api(session, page_number, search_input, ads_per_page=90):
         print(f"Eroare API: {e}")
         return None
 
+import re
+
 def get_phone_number_with_playwright(page, ad_url):
-    """Navighează la un URL, dă click pe buton și extrage numerele de telefon."""
+    """Navighează la un URL, dă click pe buton și extrage numerele de telefon folosind regex."""
     try:
-        page.goto(ad_url, wait_until='domcontentloaded', timeout=20000)
+        page.goto(ad_url, wait_until='domcontentloaded', timeout=15000)
         
         show_phone_button = page.locator("button:has-text('Arată numărul')").first
-        show_phone_button.click(timeout=5000)
         
-        page.wait_for_selector("a[href^='tel:']", timeout=5000)
-        
-        phone_links = page.locator("a[href^='tel:']").all()
-        
-        if not phone_links:
-            return "Numerele nu au apărut după click"
-            
-        numbers = set()
-        support_number = "+37322888002"
-        for link in phone_links:
-            phone = link.get_attribute('href').replace('tel:', '').strip()
-            if phone and phone != support_number:
-                numbers.add(phone)
-        
-        return ", ".join(sorted(list(numbers))) if numbers else "Nu s-au găsit numere valide"
+        try:
+            show_phone_button.wait_for(state='visible', timeout=5000)
+            show_phone_button.click(timeout=3000, force=True)
+            # Am mărit pauza pentru a permite paginii să încarce numărul
+            page.wait_for_timeout(random.uniform(1800, 2500))
+        except PlaywrightTimeoutError:
+            pass
 
-    except PlaywrightTimeoutError:
-        return "Butonul pentru telefon nu a fost găsit sau nu a apărut la timp"
+        page_content = page.locator('body').inner_text()
+        
+        # Expresie regulată robustă pentru numere de telefon
+        phone_regex = r'\+373(?:\s*\d){8,}'
+        
+        # Folosim re.finditer pentru a garanta extragerea potrivirii complete
+        matches = re.finditer(phone_regex, page_content)
+        found_numbers = [match.group(0) for match in matches]
+        
+        cleaned_numbers = {''.join(num.split()) for num in found_numbers}
+        
+        support_number_cleaned = "+37322888002"
+        valid_numbers = {num for num in cleaned_numbers if num != support_number_cleaned}
+        
+        if valid_numbers:
+            return ", ".join(sorted(list(valid_numbers)))
+        else:
+            return "Nu s-au găsit numere valide"
+
     except Exception as e:
         return f"Eroare la extragere: {type(e).__name__}"
 
@@ -203,9 +214,12 @@ if __name__ == "__main__":
             print(f"\nPasul 2: Se extrag numerele de telefon pentru {len(all_new_ads)} anunțuri noi folosind Playwright...")
             
             with sync_playwright() as p:
-                browser = p.chromium.launch(headless=True)
+                browser = p.chromium.launch(headless=False)
                 context = browser.new_context(user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36")
                 page = context.new_page()
+                
+                # Blocăm resursele inutile pentru a mări viteza
+                page.route("**/*", lambda route: route.abort() if route.request.resource_type in ["image", "stylesheet", "font"] else route.continue_())
                 
                 start_time = time.time()
                 for i, ad in enumerate(all_new_ads):
@@ -223,3 +237,4 @@ if __name__ == "__main__":
             print(f"\n--- SUCCES! S-au adăugat {len(all_new_ads)} anunțuri noi. Total în fișier: {len(existing_data) + len(all_new_ads)}. ---")
         else:
             print("\nNiciun anunț nou găsit de la ultima rulare.")
+
