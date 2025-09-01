@@ -28,14 +28,24 @@ sys.stdout = codecs.getwriter('utf-8')(sys.stdout.detach())
 
 SEARCH_PAYLOAD = {
     "subCategoryId": 659,
-    "filters": []
+    "filters": [
+        {
+            "filterId": 1,
+            "features": [
+                {
+                    "featureId": 20,
+                    "optionIds": [139]
+                }
+            ]
+        }
+    ]
 }
 
 # --- Alte setări ---
 IS_TEST_MODE = True   # Procesează doar 10 anunțuri pentru testare rapidă
 # IS_TEST_MODE = False  # Procesează TOATE anunțurile noi de pe site
 
-MAX_ADS_TO_PROCESS_IN_TEST_MODE = 10
+MAX_ADS_TO_PROCESS_IN_TEST_MODE = 89
 JSON_FILE = 'date_masini_999_complet.json'
 # =================================================================================================
 
