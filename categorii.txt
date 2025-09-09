@@ -1,0 +1,312 @@
+# =================================================================================
+# === LISTA COMPLETĂ DE FILTRE ȘI ID-uri PENTRU 999.md (Categoria AUTO) ===
+# =================================================================================
+# Extrase la data de: 2025-09-08
+# Aceste ID-uri se folosesc în `SEARCH_PAYLOAD` din scriptul `hybrid_scraper.py`.
+
+# --- Structura generală a unui filtru în `SEARCH_PAYLOAD` ---
+# "filters": [
+#     {
+#         "filterId": [ID-ul de mai jos, ex: 151 pentru Combustibil],
+#         "features": [
+#             {
+#                 "featureId": [ID-ul de mai jos, ex: 151 pentru Combustibil],
+#                 "optionIds": [ [Lista de ID-uri pentru opțiuni, ex: 24 pentru Diesel] ]
+#             }
+#         ]
+#     }
+# ]
+# Notă: Pentru filtrele de tip "range" (Preț, An), structura e diferită.
+
+# ---------------------------------------------------------------------------------
+# MARCA MAȘINII (filterId: 1, featureId: 20)
+# ---------------------------------------------------------------------------------
+# { "filterId": 1, "features": [{ "featureId": 20, "optionIds": [ID_MARCA] }] }
+# ---------------------------------------------------------------------------------
+Acura: [131]
+Alfa Romeo: [132]
+Audi: [134]
+BMW: [135]
+BYD: [30399]
+Cadillac: [136]
+Chery: [137]
+Chevrolet: [138]
+Chrysler: [140]
+Citroen: [141]
+Dacia: [142]
+Daewoo: [143]
+Daihatsu: [144]
+Dodge: [145]
+Fiat: [146]
+Ford: [139]
+GAZ: [157]
+Geely: [147]
+GMC: [148]
+Honda: [149]
+Hummer: [150]
+Hyundai: [111]
+Infiniti: [152]
+Jaguar: [153]
+Jeep: [154]
+Kia: [155]
+Lancia: [156]
+Land Rover: [164]
+Lexus: [158]
+Lifan: [159]
+Lincoln: [160]
+Maserati: [161]
+Mazda: [162]
+Mercedes: [163]
+Mini: [165]
+Mitsubishi: [166]
+Moskvich: [167]
+Nissan: [168]
+Opel: [169]
+Peugeot: [170]
+Pontiac: [171]
+Porsche: [172]
+Renault: [173]
+Rover: [174]
+Saab: [175]
+Scion: [23485]
+Seat: [176]
+Skoda: [177]
+Smart: [178]
+SsangYong: [179]
+Subaru: [180]
+Suzuki: [181]
+Tesla: [23235]
+Toyota: [182]
+UAZ: [183]
+VAZ: [133]
+Volkswagen: [184]
+Volvo: [185]
+ZAZ: [151]
+Altele: [186]
+
+# ---------------------------------------------------------------------------------
+# TIP COMBUSTIBIL (filterId: 151, featureId: 151)
+# ---------------------------------------------------------------------------------
+Benzina: [23]
+Diesel: [24]
+Gaz / Benzina (metan): [25]
+Gaz / Benzina (propan): [100]
+Hybrid: [26]
+Electric: [27]
+Altele: [28]
+
+# ---------------------------------------------------------------------------------
+# CUTIA DE VITEZE (filterId: 101, featureId: 101)
+# ---------------------------------------------------------------------------------
+Cutie Manuala: [15]
+Cutie Automata: [16]
+
+# ---------------------------------------------------------------------------------
+# TIP TRACȚIUNE (filterId: 108, featureId: 108)
+# ---------------------------------------------------------------------------------
+Din fata: [5]
+Din spate: [6]
+4x4: [7]
+
+# ---------------------------------------------------------------------------------
+# TIP CAROSERIE (filterId: 102, featureId: 102)
+# ---------------------------------------------------------------------------------
+Sedan: [8]
+Break: [9]
+Hatchback: [10]
+Crossover: [11]
+Monovolum: [12]
+Coupe: [13]
+Cabriolet: [14]
+Pickup: [101]
+Microbus: [102]
+Limuzina: [103]
+
+# ---------------------------------------------------------------------------------
+# STAREA TEHNICĂ (filterId: 107, featureId: 107)
+# ---------------------------------------------------------------------------------
+Necesita reparatie: [1]
+Accidentat: [2]
+Pentru piese: [3]
+
+# ---------------------------------------------------------------------------------
+# OPȚIUNI SUPLIMENTARE (filterId: 110, featureId: 110)
+# ---------------------------------------------------------------------------------
+Scaune de piele: [17]
+Aer conditionat: [18]
+Clima automata: [19]
+Sistem de navigare: [20]
+Trapa: [21]
+Xenon: [22]
+
+# ---------------------------------------------------------------------------------
+# FILTRE DE TIP INTERVAL (nu folosesc optionIds)
+# ---------------------------------------------------------------------------------
+# PREȚ (filterId: 2, featureId: 2)
+# "value": {"min": 5000, "max": 10000, "currency": "eur"}
+
+# AN FABRICAȚIE (filterId: 19, featureId: 19)
+# "value": {"min": 2015, "max": 2020}
+
+# CAPACITATE CILINDRICĂ (filterId: 103, featureId: 103)
+# "value": {"min": 1500, "max": 2000}
+
+# RULAJ (filterId: 104, featureId: 104)
+# "value": {"min": 50000, "max": 100000}
+
+
+# =================================================================================
+# === EXEMPLU JSON brut (pentru referință) ===
+# =================================================================================
+{
+    "ad": {
+        "id": "100065617",
+        "title": "Peugeot 3008",
+        "subCategory": {
+            "id": 659,
+            "title": {
+                "translated": "Autoturisme",
+                "__typename": "I18NTr"
+            },
+            "parent": {
+                "id": 5000,
+                "title": {
+                    "translated": "Mijloace de transport",
+                    "__typename": "I18NTr"
+                },
+                "parent": {
+                    "id": 658,
+                    "title": {
+                        "translated": "Transport",
+                        "__typename": "I18NTr"
+                    },
+                    "__typename": "Category"
+                },
+                "__typename": "Category"
+            },
+            "__typename": "Category"
+        },
+        "price": {
+            "id": 2,
+            "type": "FEATURE_PRICE",
+            "value": {
+                "bargain": false,
+                "down_payment": 0,
+                "measurement": "UNIT_UNSPECIFIED",
+                "mode": "PM_FIXED",
+                "unit": "UNIT_EUR",
+                "value": 12190
+            },
+            "__typename": "FeatureValue"
+        },
+        "pricePerMeter": null,
+        "images": {
+            "id": 14,
+            "type": "FEATURE_IMAGES",
+            "value": [
+                "dfb8d0b65975db731b0dc15ab4bcda5e.jpg",
+                "f3253e76b9552ce19199c6c635ef772b.jpg",
+                "186fc8cf57f7cd50631c303716406092.jpg",
+                "c4f86d79f785cfd932f22f62fac0b245.jpg",
+                "1c3c3bd028f587430635eae3d50f9e95.jpg",
+                "f53ff41052991319166f7aaf7adaedc7.jpg",
+                "dcd8143eb5ab7d167e91cd33690710af.jpg",
+                "46d2b20b81ff34d153a612434618c361.jpg",
+                "646131ae37e28d4f133d6c3c3eeb4b5b.jpg",
+                "daaff9a67a500e448a1bfcdef462e340.jpg",
+                "322ad9499c73e343551dfe46cdc5b22f.jpg",
+                "dffa543c5345459b38c8855a828a36e4.jpg",
+                "6a669dc909bbf4405fcd1ddb910be725.jpg",
+                "5bc4ecfd5e82d2790f62ea3627b0a315.jpg",
+                "0b1fe06da7deffa75b9284cd73476e80.jpg",
+                "190e2a53ee5ca827abfafd5ea7cf88b9.jpg",
+                "3079a73b7f90c68ed36c89338eb7a23d.jpg",
+                "f3b0c3547550adf57d59a8cc834561c7.jpg",
+                "6419fdecea0b682af98408ddc5e40c9d.jpg",
+                "51e7bf718dc96c52e7f9e29d76706d6b.jpg"
+            ],
+            "__typename": "FeatureValue"
+        },
+        "__typename": "Advert",
+        "carFuel": {
+            "id": 151,
+            "type": "FEATURE_OPTIONS",
+            "value": {
+                "abbreviations": {
+                    "desktop": "Diesel",
+                    "mobile": "Dsl"
+                },
+                "translated": "Diesel",
+                "value": 24
+            },
+            "__typename": "FeatureValue"
+        },
+        "carDrive": {
+            "id": 108,
+            "type": "FEATURE_OPTIONS",
+            "value": {
+                "abbreviations": {},
+                "translated": "Din față",
+                "value": 5
+            },
+            "__typename": "FeatureValue"
+        },
+        "carTransmission": {
+            "id": 101,
+            "type": "FEATURE_OPTIONS",
+            "value": {
+                "abbreviations": {
+                    "desktop": "Aut.",
+                    "mobile": "Aut."
+                },
+                "translated": "Cutie Automată",
+                "value": 16
+            },
+            "__typename": "FeatureValue"
+        },
+        "mileage": {
+            "id": 104,
+            "type": "FEATURE_INT_UNIT",
+            "value": {
+                "unit": "UNIT_KILOMETER",
+                "value": 1500
+            },
+            "__typename": "FeatureValue"
+        },
+        "engineVolume": {
+            "id": 103,
+            "type": "FEATURE_INT_UNIT",
+            "value": {
+                "unit": "UNIT_CENTIMETER_CUBE",
+                "value": 1500
+            },
+            "__typename": "FeatureValue"
+        },
+        "realEstate": {
+            "id": 795,
+            "type": "FEATURE_OPTIONS",
+            "value": {
+                "abbreviations": {},
+                "translated": "Dealer auto",
+                "value": 23241
+            },
+            "__typename": "FeatureValue"
+        },
+        "transportYear": {
+            "id": 19,
+            "type": "FEATURE_INT",
+            "value": 2020,
+            "__typename": "FeatureValue"
+        },
+        "booster": {
+            "enable": true,
+            "__typename": "BoosterSettings"
+        },
+        "label": null,
+        "frame": null,
+        "animation": null,
+        "animationAndFrame": null
+    },
+    "clickToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTczMzk0MjUsIkMiOnsiciI6MSwiYiI6MTQwLCJjIjo2NTgsInoiOjY1OSwiYSI6IjEwMDA2NTYxNyIsImkiOiIxODUuMTg0LjE5Mi4yMjMiLCJ1IjoiMjIyYjdlODktYzFmOS00Nzk3LWI1YWUtMWYyZTZjZjJmMmM3IiwicyI6ImRlc2tvdG9wIiwicCI6ImFkc19saXN0X2lubGluZSIiLCJ4IjoicHJlbWl1bSIsImwiOiJmODdhNjFhOC03MjNjLTQ3ZjUtODY5NC02ZGExMTYxMjExMjAiLCJlIjoiMTg1LjE4NC4xOTIuMjIzLzIyMmI3ZTg5LWMxZjktNDc5Ny1iNWFlLTFmMmU2Y2YyZjJjNyIsInQiOiIyMDI1LTA5LTA4VDEyOjUwOjI1LjE4ODgxODM2OFoifX0.a7GJo2D1kvGHkBnibnf9SFhTylaBtvKumPxh2XSqa5U",
+    "__typename": "Booster_Booster"
+}

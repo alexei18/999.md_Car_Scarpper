@@ -35,7 +35,7 @@ SEARCH_PAYLOAD = {
             "features": [
                 {
                     "featureId": 20,
-                    "optionIds": [111]
+                    "optionIds": [34]
                 }
             ]
         }
@@ -43,10 +43,10 @@ SEARCH_PAYLOAD = {
 }
 
 # --- Alte setări ---
-IS_TEST_MODE = True   # Procesează doar 10 anunțuri pentru testare rapidă
+IS_TEST_MODE = False   # Procesează doar 10 anunțuri pentru testare rapidă
 # IS_TEST_MODE = False  # Procesează TOATE anunțurile noi de pe site
 
-MAX_ADS_TO_PROCESS_IN_TEST_MODE = 20
+MAX_ADS_TO_PROCESS_IN_TEST_MODE = 89
 JSON_FILE = 'date_masini_999_complet.json'
 # =================================================================================================
 
@@ -95,7 +95,7 @@ def get_phone_number_with_playwright(page, ad_url):
             try:
                 show_phone_button.wait_for(state='visible', timeout=5000)
                 show_phone_button.click(timeout=3000, force=True)
-                page.wait_for_timeout(random.uniform(1800, 2500))
+                page.wait_for_timeout(1000) 
             except PlaywrightTimeoutError:
                 # Ignorăm eroarea dacă butonul nu e găsit, poate numărul e deja vizibil
                 pass
@@ -222,7 +222,7 @@ if __name__ == "__main__":
             print(f"\nPasul 2: Se extrag numerele de telefon pentru {len(all_new_ads)} anunțuri noi folosind Playwright...")
             
             with sync_playwright() as p:
-                browser = p.chromium.launch(headless=False)
+                browser = p.chromium.launch(headless=True)
                 context = browser.new_context(user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36")
                 page = context.new_page()
                 
